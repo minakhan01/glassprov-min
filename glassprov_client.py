@@ -17,6 +17,7 @@ def periodic_send(ws):
     ws.send('android:glass:f88fca25588b', 'To: the sky glass. Love, ' + client_name);
     ws.send('android:glass:f88fca26183f', 'To: the cotton glass. Love, ' + client_name);
     ws.send('android:glass:f88fca26273d', 'To: the shale glass. Love, ' + client_name);
+    ws.send('android:glass:f88fca2627c1', 'To: shale2. Love, ' + client_name);
     gevent.spawn_later(5, periodic_send, ws)
 
 def callback(ws, **kw):
