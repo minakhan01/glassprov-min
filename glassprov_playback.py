@@ -32,7 +32,8 @@ def start_ws_server():
 
 def open_page():
     print "Opening page in Chrome"
-    p = subprocess.Popen(['/usr/bin/open', '-a', '/Applications/Google Chrome.app', 'http://localhost:8991/stage-displays/viewer.html'], stdout=LOG_OUTFILE)
+    p = subprocess.Popen(['chrome-cli', 'open', 'http://localhost:8991/stage-displays/viewer.html', '-i'], stdout=LOG_OUTFILE)
+    # p = subprocess.Popen(['/usr/bin/open', '-a', '/Applications/Google Chrome.app', 'http://localhost:8991/stage-displays/viewer.html', '--args', '--incognito'], stdout=LOG_OUTFILE)
     r = p.wait()
     if r:
         raise RuntimeError('An error occurred opening the page')
