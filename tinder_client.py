@@ -9,7 +9,7 @@ import datetime
 client_name = ""
 current_time = datetime.datetime.today()
 last_fire_time = datetime.datetime.today()
-refire_threshold = datetime.timedelta(seconds=3)
+refire_threshold = datetime.timedelta(seconds=1)
 adb = "adb"
 yes_list = [adb, 'shell', 'input', 'touchscreen', 'swipe', '200', '500', '500', '500', '300']
 no_list = [adb, 'shell', 'input', 'touchscreen', 'swipe', '500', '500', '200', '500', '300']
