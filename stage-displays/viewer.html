@@ -26,6 +26,7 @@
     <script type="text/javascript" src="js/underscore.js"></script>
 
     <script type="text/javascript">
+        var nEval = 0;
 
         Date.prototype.today = function () {
             return ((this.getDate() < 10)?"0":"") + this.getDate() +"/"+(((this.getMonth()+1) < 10)?"0":"") + (this.getMonth()+1) +"/"+ this.getFullYear();
@@ -55,6 +56,8 @@
         vidChannels.unshift("videos");
 
         wssuccess = function(data){
+          nEval++;
+          console.log("nEval is " + nEval);
           server = data.wsurl;
           Socket = new ReconnectingWebSocket(server);
           console.log("Made the socket.");
