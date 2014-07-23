@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+
+    <title>GlassProv</title>
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/viewercss.css" rel="stylesheet">
+    <script type="text/javascript" src="js/viewer.js"></script>
+    <link href="videos/video-js/video-js.css" rel="stylesheet">
+
+    <script src="videos/video-js/video.js"></script>
+    <script type="text/javascript" src="js/msgpack.js"></script>
+    <script type="text/javascript" src="js/wearscript-client.js"></script>
+    <script type="text/javascript" src="js/reconnecting-websocket.js"></script>
+    <script type="text/javascript" src="jquery/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="js/underscore.js"></script>
+
+    <script type="text/javascript">
+        var didRegister = false;
+        Date.prototype.today = function () {
+            return ((this.getDate() < 10)?"0":"") + this.getDate() +"/"+(((this.getMonth()+1) < 10)?"0":"") + (this.getMonth()+1) +"/"+ this.getFullYear();
+        }
+
+        Date.prototype.timeNow = function () {
+             return ((this.getHours() < 10)?"0":"") + this.getHours() +":"+ ((this.getMinutes() < 10)?"0":"") + this.getMinutes() +":"+ ((this.getSeconds() < 10)?"0":"") + this.getSeconds();
+        }
+
+        function padInt(_int, len) {
+          paddingNeeded = len - _int.toString().length;
+          if (paddingNeeded < 0) {
+            return _int;
+          } else {
+            paddingArr = [];
+            for (var k = 0; k < paddingNeeded; k++) {
+              paddingArr.push('0');
+            }
+            return paddingArr.join("") + _int.toString();
+          }
+        }
+
+        Date.prototype.timeNowMilli = function () {
+             return ((this.getHours() < 10)?"0":"") + this.getHours() +":"+ ((this.getMinutes() < 10)?"0":"") + this.getMinutes() +":"+ ((this.getSeconds() < 10)?"0":"") + this.getSeconds() + "." + padInt(this.getMilliseconds(), 3);
+        }
+
+        currentTimeString = function () {
+            return new Date().today() + " @ " + new Date().timeNowMilli();
+        }
+
+        function registered(channel, name) {
+            console.log("Registered as " + name);
+        }
+
+
+        var IDlist = [ "f8:8f:ca:25:58:6b", "f8:8f:ca:25:58:8b", "f8:8f:ca:25:c5:0b", "f8:8f:ca:24:64:89", "f8:8f:ca:24:65:25", "f8:8f:ca:25:f8:e5"];
+
+        var nameList = ["all", "will", "russ", "lexie", "max", "paul"];
+
+        var lineChannels = _.map(IDlist, function(el) {return "lines:" + el});
+        lineChannels.unshift("lines");
+
+        var vidChannels = _.map(IDlist, function(el){ return "videos:" + el});
+        vidChannels.unshift("videos");
+
+        wssuccess = function(data){
+          server = data.wsurl;
+          Socket = new ReconnectingWebSocket(server);
+          // Socket = new WebSocket(server);
+          console.log("Made the socket.");
+          ws = myWearScriptConnectionFactory(Socket, function (connected) {
+              console.log('Connected: ' + connected);
+              ws.subscribe('registered', registered);
+              if (!didRegister) {
+                ws.send('register', 'registered', "dashboard:" + currentTimeString());
+                didRegister = true;
+              }
+              ws.subscribe('blob', blob_cb);
+          });
+
+          // e.g. publish statement from broadcaster: 
+          // ws.publish("glassprov", {user: "kevin.b.tu", glass:"1", command: "showline", line: "What's my line"});
+          // ws.publish("glassprov", {user: "scottgwald", glass:"2", command: "playvideo", line: "vid001.mp4"});
+
+          // User: username
+          // glass: 1-4 (Which quadrant to display in)
+          // command: "showline" or "playvideo"
+          // line: text to display or video identifier
+
+          //ws.subscribe('glassprov', glassprov_cb);
+          // ws.subscribe('lines', lines_cb);
+
+          // here we'll subscribe to "blob" instead
+
+
+          for (chan in lineChannels) {
+            ws.subscribe(lineChannels[chan], lines_cb)
+          }
+          for (chan in vidChannels) {
+            ws.subscribe(vidChannels[chan], vid_cb);
+          }
+          ws.subscribe("slides:", slides_cb);
+      };
+      // $.ajax({
+      //     type: "GET",
+      //     url: "/api/ws/get",
+      //     dataType: 'json',
+      //     success: wssuccess
+      // });
+      wssuccess({wsurl: "ws://localhost:8112/"});
+
+      var nPanels = 1;
+
+      function blob_cb(channel, actor, content) {
+        var panel = nameList.indexOf(actor);
+        if (panel == 0) {
+          for (var i = 0; i < nPanels; i++ ) {
+            $("#q" + (panel + 1) + " span").html(content);
+          }
+          //send to all
+        } else {
+          $("#q" + panel + " span").html(content);
+          // send to the specific one
+        }
+      }
+
+      function lines_cb(channel, message) {
+          var panel = lineChannels.indexOf(channel);
+          if (panel == 0) {
+            for (var i = 0; i < nPanels; i++ ) {
+              $("#q" + (panel + 1) + " span").html(message.text);
+            }
+            //send to all
+          } else {
+            $("#q" + panel + " span").html(message.text);
+            // send to the specific one
+          }
+          // show line on panel
+      }
+
+      function slides_cb(channel, message) {
+          console.log("slides");
+          for (var i = 0; i < nPanels; i++ ) {
+              $("#q" + (i + 1) + " span").html("<img style='max-height:100%;max-width:100%;' src='"+message.url+"'/>");
+            }
+      }
+      // var id = 'video'+quadrant;
+      //     var finalText = "<video loop autoplay preload id='"+id+"'"+" class='video-js vjs-default-skin'"+" preload='auto' width='500' height='280'"+"><source src="+"'"+"videos/"+message.line+"'"+" type='video/mp4' />"+"</video>";
+      //     document.getElementsByClassName("text")[quadrant].innerHTML=finalText;
+
+      function vid_cb(channel, message) {
+          var panel = vidChannels.indexOf(channel);
+          $("video").remove();
+          if (panel == 0) {
+            for (var i = 0; i < nPanels; i++ ) {
+              $("#q" + (panel + 1) + " span").html("<video autoplay preload class='video-js vjs-default-skin' preload='auto'  style='max-height:100%;max-width:100%;'><source src='"+ escape(message.url)+"' type='video/mp4'/> </video>");
+            }
+            //send to all
+          } else {
+            $("#q" + panel + " span").html("<video autoplay preload class='video-js vjs-default-skin' preload='auto' style='max-height:100%;max-width:100%;'><source src='"+ escape(message.url)+"' type='video/mp4'/> </video>");
+            // send to the specific one
+          }
+          // show line on panel
+      }
+
+            // WS.subscribe('lines:' + me, function(chan, data) {
+            //     console.log("Got a lines object!");
+            //     console.log(JSON.stringify(data));
+            //     if (data.glassID == me) {
+            //         WS.wake();
+            //         WS.activityCreate();
+            //         WS.displayCardTree();
+            //         var tree = new WS.Cards();
+            //         tree.add(data.text, 'GlassProv');
+            //         WS.cardTree(tree);
+            //         //console.log("It's me! And the text is: " + data.text);
+            //         //WS.say(data.text);
+            //     } else {
+            //         console.log("It's not me. But the text is: " + data.text);
+            //     }
+            // });
+
+
+      // function glassprov_cb(channel, message) {
+      //   // update user name
+      //   var quadrant = message.glass-1;
+      //   document.getElementsByClassName("user")[quadrant].innerHTML=message.user;
+      //   document.getElementsByClassName("audience-name")[quadrand].innerHTML="Submitted By: "+message.audience;
+      //   if(message.command=="showline"){
+      //     document.getElementsByClassName("text")[quadrant].innerHTML=message.line;
+      //     $('text').textfill({ maxFontPixels: 75 });
+      //   } else if(message.command=="playvideo"){
+      //     var id = 'video'+quadrant;
+      //     var finalText = "<video loop autoplay preload id='"+id+"'"+" class='video-js vjs-default-skin'"+" preload='auto' width='500' height='280'"+"><source src="+"'"+"videos/"+message.line+"'"+" type='video/mp4' />"+"</video>";
+      //     document.getElementsByClassName("text")[quadrant].innerHTML=finalText;
+      //   }
+      // }
+
+      function myWearScriptConnectionFactory(websocket, glassConnectedCallback) {
+          function onopen(event) {
+              console.log('opened');
+        ws.subscribe('subscriptions', subscription_cb);
+              ws.subscribe('log', log_cb);
+              ws.subscribe('urlopen', urlopen_cb);
+        subscription_cb();
+          }
+          var ws = new WearScriptConnection(websocket, "webapp", Math.floor(Math.random() * 100000), onopen);
+          ws.subscribeTestHandler();
+          function subscription_cb() {
+        glassConnectedCallback(ws.exists('glass'));
+              // TODO(brandyn): Only do this once, then provide a button to refresh
+          }
+          function log_cb(channel, message) {
+              console.log(channel + ': ' + message);
+              // TODO(brandyn): Have a notification that a log message was sent
+          }
+          function gist_modify_cb(channel, gists) {
+              HACK_GIST_MODIFIED = gists;
+              console.log('Gist modified');
+          }
+          function gist_get_cb(channel, gist) {
+              window.HACK_GIST = gist;
+              console.log(channel + ': ' + gist);
+          }
+          function urlopen_cb(channel, url) {
+              window.open(url);
+          }
+          return ws;
+      }
+    </script>
+
+    <font size="50" color="red">
+    <!--<div >Elapsed Time: <span id="timeDisplay"></span></div>
+    <a href="#" onclick="getCurrentTime();">Time</a> -->
+  </font>
+
+    <!--Mina's change-->
+    <video src="HansRosling.mp4" controls autoplay width="1024" height="768" id="video1"></video>
+
+    <script>
+    
+    var oVideo = document.getElementById("video1"); 
+    var display = document.getElementById("timeDisplay");
+    var currentTime=oVideo.currentTime;
+    //Mina's change
+     //  Capture time changes and display current position
+     oVideo.addEventListener('timeupdate', function () {
+      currentTime=oVideo.currentTime;
+      console.log("In event listener");
+      console.log(currentTime);
+      //display.innerContent = currentTime ;
+     }, false);
+    
+    // switching between single screen and multi screens
+    function getCurrentTime(){
+      console.log(oVideo.currentTime);
+    }
+    function clearContent(){
+        var num = 6;
+        while(num>=0){
+            document.getElementsByClassName('user')[num].innerHTML = "";
+            document.getElementsByClassName('text')[num].innerHTML = "";
+            num-=1;
+            console.log(num);
+        }
+    }
+
+
+    var display = "1"; //Mina's change
+    function toggle4(){
+        clearContent();
+        location.href = "#q1";
+        display = "1"; //Mina's change
+    }
+    
+    //WEARSCRIPT INTEGRATION
+
+    function handleInput(){
+
+    }
+
+    </script>
+
+
+  </head>
+
+  <body>
+
+  </body>
+</html>

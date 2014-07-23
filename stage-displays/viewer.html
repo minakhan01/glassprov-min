@@ -3,6 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
@@ -15,6 +16,7 @@
 
     <!-- Custom styles for this template -->
     <link href="css/viewercss.css" rel="stylesheet">
+    <script src="//www.parsecdn.com/js/parse-1.2.19.min.js"></script>
     <script type="text/javascript" src="js/viewer.js"></script>
     <link href="videos/video-js/video-js.css" rel="stylesheet">
 
@@ -47,6 +49,105 @@
             return paddingArr.join("") + _int.toString();
           }
         }
+
+        function buildData(){
+        var ans1 = $("#q1").val();
+        var ans2 = $("#q2").val();
+        var ans3 = $("#q3").val();
+        var ans4 = $("#q4").val();
+        var ans5 = $("#q5").val();
+        var ans6 = $("#q6").val();
+        var ans7 = $("#q7").val();
+        var ans8 = $("#q8").val();
+        var ans9 = $("#q9").val();
+        var ans10 = $("#q10").val();
+        var ans11 = $("#q11").val();
+          Parse.initialize("Ksv3PFuEl6aMCIMzNdra8940xTo0J9sxxpSZJgp5", "dW2DZI6z6x1jw7zQh1ZjvPCR4KwauvuufuBMNcgl");
+
+          var Answers = Parse.Object.extend("Answers");
+          var answers = new Answers();
+          console.log("WRITING DATA NOW");
+          console.log(ans1);
+          console.log(ans2);
+          console.log(ans3);
+          console.log(ans4);
+          console.log(ans5);
+          console.log(ans6);
+          console.log(ans7);
+          console.log(ans8);
+          console.log(ans9);
+          console.log(ans10);
+          console.log(ans11);  
+
+          answers.save({
+  'ans1': ans1, 'ans2': ans2,'ans3': ans3,'ans4': ans4,'ans5': ans5,'ans6': ans6,'ans7': ans7,'ans8': ans8,'ans9': ans9,'ans10': ans10, 'ans11': ans11}, {
+  success: function(answers) {
+    console.log('The object was saved successfully.');
+  },
+  error: function(answers, error) {
+    console.log('The save failed.');
+  }
+});        
+        }
+
+        function visibility_switch(id) {
+
+      document.getElementById('question1').style.display = "none";
+      document.getElementById('question2').style.display = "none";
+      document.getElementById('question3').style.display = "none";
+      document.getElementById('question4').style.display = "none";
+      document.getElementById('question5').style.display = "none";
+      document.getElementById('question6').style.display = "none";
+      document.getElementById('question7').style.display = "none";
+      document.getElementById('question8').style.display = "none";
+      document.getElementById('question9').style.display = "none";      
+      console.log('In ID');
+      console.log(id);
+    /* If the ID of box1 is passed, hide the IDs of the other boxes */
+    if(id == 'question1') {
+      document.getElementById('question1').style.display = "block";           
+    }
+    
+   /* If the ID of box2 is passed, hide the IDs of the other boxes */
+    else if(id == 'question2') {
+      document.getElementById('question2').style.display = "block";
+      console.log('In Question 1 JUST TO SHOW I CAN PRINT');           
+    }
+    
+     /* If the ID of box3 is passed, hide the IDs of the other boxes */
+    else if(id == 'question3') {
+      document.getElementById('question3').style.display = "block";           
+    }
+
+    else if(id == 'question4') {
+      document.getElementById('question4').style.display = "block";           
+    }
+
+       /* If the ID of box2 is passed, hide the IDs of the other boxes */
+    else if(id == 'question5') {
+      document.getElementById('question5').style.display = "block";           
+    }
+    
+     /* If the ID of box3 is passed, hide the IDs of the other boxes */
+    else if(id == 'question6') {
+      document.getElementById('question6').style.display = "block";           
+    }
+
+    else if(id == 'question7') {
+      document.getElementById('question7').style.display = "block";           
+    }
+
+       /* If the ID of box2 is passed, hide the IDs of the other boxes */
+    else if(id == 'question8') {
+      document.getElementById('question8').style.display = "block";           
+    }
+    
+     /* If the ID of box3 is passed, hide the IDs of the other boxes */
+    else if(id == 'question9') {
+      document.getElementById('question9').style.display = "block";           
+    }
+    
+}
 
         Date.prototype.timeNowMilli = function () {
              return ((this.getHours() < 10)?"0":"") + this.getHours() +":"+ ((this.getMinutes() < 10)?"0":"") + this.getMinutes() +":"+ ((this.getSeconds() < 10)?"0":"") + this.getSeconds() + "." + padInt(this.getMilliseconds(), 3);
@@ -117,7 +218,7 @@
       // });
       wssuccess({wsurl: "ws://localhost:8112/"});
 
-      var nPanels = 6;
+      var nPanels = 1;
 
       function blob_cb(channel, actor, content) {
         var panel = nameList.indexOf(actor);
@@ -237,48 +338,240 @@
       }
     </script>
 
+    <font size="50" color="red">
+    <!--<div >Elapsed Time: <span id="timeDisplay"></span></div>
+    <a href="#" onclick="getCurrentTime();">Time</a> -->
+  </font>
+
+    <!--Mina's change-->
+
+    <style type="text/css">
+#questions {
+border: 3px solid black;
+display: block;
+}
+
+#question1 {
+border: 3px solid blue;
+display: none;
+}
+#question2 {
+border: 3px solid green;
+display: none;
+}
+#question3 {
+border: 3px solid orange;
+display: none;
+}
+#question4 {
+border: 3px solid blue;
+display: none;
+}
+#question5 {
+border: 3px solid green;
+display: none;
+}
+#question6 {
+border: 3px solid orange;
+display: none;
+}
+#question7 {
+border: 3px solid blue;
+display: none;
+}
+#question8 {
+border: 3px solid green;
+display: none;
+}
+#question9 {
+border: 3px solid orange;
+display: none;
+}
+</style>
+
+
+<font size="3" color="red">
+<a href="#" onclick="visibility_switch('question1');">Question 1</a> |
+<a href="#" onclick="visibility_switch('question2');">Question 2</a> | 
+<a href="#" onclick="visibility_switch('question3');">Question 3</a> | 
+<a href="#" onclick="visibility_switch('question4');">Question 4</a> | 
+<a href="#" onclick="visibility_switch('question5');">Question 5</a> | 
+<a href="#" onclick="visibility_switch('question6');">Question 6</a> | 
+<a href="#" onclick="visibility_switch('question7');">Question 7</a> | 
+<a href="#" onclick="visibility_switch('question8');">Question 8</a> | 
+<a href="#" onclick="visibility_switch('question9');">Question 9</a> |
+<a href="#" onclick="buildData();">End</a>
+
+<div id="questions">
+<h1> Your Questions will appear here :) </h1>
+</div>
+
+<div id="question1">
+<form>
+What color is Europe?<br> <input type="text" name="q1"  id="q1"><br>
+What color is Africa (South of Sahara)? <br><input type="text" name="q2" id="q2">
+</form>
+</div>
+
+<div id="question2">
+<form>
+  What countries were better off prior to 1800?<br> <input type="text" name="q3"  id="q3">
+  </form>
+</div>
+
+<div id="question3">
+<form>
+  What were the two causes of the "catastrophe" in the early 20th century?<br> <input type="text" name="q4" id="q4">
+  </form>
+</div>
+
+<div id="question4">
+  <form>
+  What year was Hans Rosling (the speaker) born? <br> <input type="text" name="q5" id="q5">
+  </form>
+</div>
+
+<div id="question5">
+  <form>
+  What five "Asian giants" were still behind in 1948? <br> <input type="text" name="q6" id="q6">
+  </form>
+</div>
+
+<div id="question6">
+  <form>
+  What was the best country in terms of health and wealth by 2009? <br> <input type="text" name="q7"  id="q7"><br>
+
+  What was the worst country in terms of health and wealth by 2009? <br> <input type="text" name="q8"  id="q8">
+  </form>
+</div>
+
+<div id="question7">
+  <form>
+  Which country is like the province of Guizhou? <br> <input type="text" name="q9"  id="q9">
+  </form>
+</div>
+
+<div id="question8">
+  <form>
+  Which country is like the rural parts of Guizhou? <br> <input type="text" name="q10"  id="q10">
+  </form>
+</div>
+
+<div id="question9">
+  <form>
+  How many numbers were plotted in this study? <br> <input type="text" name="q11" id="q11">
+  </form>
+</div>
+
+    <video src="HansRosling.mp4" controls autoplay width="1024" height="768" id="video1"></video>
+    <iframe src="http://free.timeanddate.com/countdown/i48ziftz/n43/cf100/cm0/cu4/ct0/cs0/ca0/cr0/ss0/cac000/cpc000/pcfff/tcfff/fs100/szw320/szh135/tatTime%20left%20to%20Event%20in/tac000/tptTime%20since%20Event%20started%20in/tpc000/mac000/mpc000/iso0001-01-01T00:17:00/bo2" frameborder="0" width="322" height="137"></iframe>
+
+</font>
 
     <script>
-    // Code to auto resize text to fit in box.
-    ;(function($) {
-      $.fn.textfill = function(options) {
-          var fontSize = options.maxFontPixels;
-          var ourText = $('span:visible:first', this);
-          var maxHeight = $(this).height();
-          var maxWidth = $(this).width();
-          var textHeight;
-          var textWidth;
-          do {
-              ourText.css('font-size', fontSize);
-              textHeight = ourText.height();
-              textWidth = ourText.width();
-              fontSize = fontSize - 1;
-          } while ((textHeight > maxHeight || textWidth > maxWidth) && fontSize > 3);
-          return this;
+    
+    var oVideo = document.getElementById("video1"); 
+    var display = document.getElementById("timeDisplay");
+    var currentTime=oVideo.currentTime;
+    var second_round=Math.floor(currentTime);
+    var question1_time=75; 
+    var question2_time=91;
+    var question3_time=120;
+    var question4_time=152;
+    var question5_time=177;
+    var question6_time=215;
+    var question7_time=240;
+    var question8_time=262;
+    var question9_time=284;
+    var question_status=0;
+    var video_length=oVideo.duration; 
+
+    //Mina's change
+     //  Capture time changes and display current position
+     oVideo.addEventListener('timeupdate', function () {
+      currentTime=oVideo.currentTime;
+      second_round=Math.floor(currentTime);
+      console.log("In event listener");
+      console.log(currentTime);
+      console.log(second_round);
+      switch(second_round){
+        case question1_time:
+          if (question_status != 1){
+            visibility_switch('question1');
+            question_status=1;
+            console.log('change to question 1');
+          }
+          break;
+        case question2_time:
+          if (question_status != 2){
+            visibility_switch('question2');
+            question_status=2;
+            console.log('change to question 2');
+          }
+          break;
+        case question3_time:
+          if (question_status != 3){
+            visibility_switch('question3');
+            question_status=3;
+            console.log('change to question 3');
+          }
+          break;
+        case question4_time:
+          if (question_status != 4){
+            visibility_switch('question4');
+            question_status=4;
+            console.log('change to question 4');
+          }
+        case question5_time:
+          if (question_status != 5){
+            visibility_switch('question5');
+            question_status=5;
+            console.log('change to question 5');
+          }
+          break;
+        case question6_time:
+          if (question_status != 6){
+            visibility_switch('question6');
+            question_status=6;
+            console.log('change to question 6');
+          }
+          break;
+        case question7_time:
+          if (question_status != 7){
+            visibility_switch('question7');
+            question_status=7;
+            console.log('change to question 7');
+          }
+          break;
+        case question8_time:
+          if (question_status != 8){
+            visibility_switch('question8');
+            question_status=8;
+            console.log('change to question 8');
+          }
+          break;
+        case question9_time:
+          if (question_status != 9){
+            visibility_switch('question9');
+            question_status=9;
+            console.log('change to question 9');
+          }
+          break;
+        case video_length:
+          if (question_status != 10){
+            buildData();
+            question_status=10;
+            console.log('submitting data');
+          }
+          break;  
       }
-    })(jQuery);
-    $(document).ready(function() {
-      $('.q1').textfill({ maxFontPixels: 75 });
-      $('.q2').textfill({ maxFontPixels: 75 });
-      $('.q3').textfill({ maxFontPixels: 75 });
-      $('.q4').textfill({ maxFontPixels: 75 });
-      $('.q5').textfill({ maxFontPixels: 75 });
-      $('.q6').textfill({ maxFontPixels: 75 });
-    });
+     }, false);
     
-    $(document).keydown(function(event) {
-      if (event.keyCode ==  32) {
-        if (typeof ws != "undefined") {
-          ws.send('blob', 'startShow', '');
-        }
-      };
-    })
-
-    </script>
-
-    <script>
     // switching between single screen and multi screens
-    
+    function getCurrentTime(){
+      console.log(oVideo.currentTime);
+    }
+
     function clearContent(){
         var num = 6;
         while(num>=0){
@@ -289,11 +582,12 @@
         }
     }
 
-    var display = "6";
+
+    var display = "1"; //Mina's change
     function toggle4(){
         clearContent();
         location.href = "#q1";
-        display = "6";
+        display = "1"; //Mina's change
     }
     
     //WEARSCRIPT INTEGRATION
@@ -309,80 +603,5 @@
 
   <body>
 
-<!-- <video id="example_video_1" class="video-js vjs-default-skin"
-  controls preload="auto" width="640" height="264"
-  data-setup='{"autoplay": true, "example_option":true}'>
- <source src="videos/001.mp4" type='video/mp4' />
- </video> -->
-
-  <div id="q1" class="container q1" style="width:33%; height:50%; float:left">
-    <div class="user"></div>
-    <div class="audience-name"></div>
-    <div class="text-container">
-      <div class="text">
-        <span></span>
-      </div>
-    </div>
-  </div>
-
-  <div id="q2" class="container q2" style="width:33%; height:50%; float:left">
-    <div class="user"></div>
-    <div class="audience-name"></div>
-    <div class="text-container">
-      <div class="text">
-        <span></span>
-      </div>
-    </div>
-  </div>
-
-  <div id="q3" class="container q3" style="width:34%; height:50%; float:right">
-    <div class="user"></div>
-    <div class="audience-name"></div>
-    <div class="text-container">
-      <div class="text">
-        <span></span>
-      </div>
-    </div>
-  </div>
-
-  <div id="q4" class="container q4" style="width:33%; height:50%; float:left">
-    <div class="user"></div>
-    <div class="audience-name"></div>
-    <div class="text-container">
-      <div class="text">
-        <span></span>
-      </div>
-    </div>
-  </div>
-
-  <div id="q5" class="container q5" style="width:33%; height:50%; float:left">
-    <div class="user"></div>
-    <div class="audience-name"></div>
-    <div class="text-container">
-      <div class="text">
-        <span></span>
-      </div>
-    </div>
-  </div>
-
-  <div id="q6" class="container q6" style="width:34%; height:50%; float:right">
-    <div class="user"></div>
-    <div class="audience-name"></div>
-    <div class="text-container">
-      <div class="text">
-        <span></span>
-      </div>
-    </div>
-  </div>
-<!--   <div id="q5" style="width:100%;height:100%;position:relative;z-index:100;float:right;" class="container q5">
-    <div class="user">Test</div>
-    <div class="audience-name">Test</div>
-    <div class="text-container">
-      <div class="text">
-	<span>Test</span>
-      </div>
-    </div>
-
-  </div> -->
   </body>
 </html>
