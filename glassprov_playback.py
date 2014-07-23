@@ -23,6 +23,7 @@ delta_to_start = 1
 delta_between_messages = 2
 number_of_messages = 100
 HTTP_PORT = 8991
+HTTP_PORT1 = 8992
 WS_PORT = 8112
 log_outfile_name = "playback.log"
 LOG_OUTFILE = open(log_outfile_name, 'wb')
@@ -33,7 +34,13 @@ def start_ws_server():
 def open_page():
     print "Opening page in Chrome"
     p = subprocess.Popen(['chrome-cli', 'open', 'http://localhost:8991/stage-displays/viewer.html', '-i'], stdout=LOG_OUTFILE)
-    # p = subprocess.Popen(['/usr/bin/open', '-a', '/Applications/Google Chrome.app', 'http://localhost:8991/stage-displays/viewer.html', '--args', '--incognito'], stdout=LOG_OUTFILE)
+    r = p.wait()
+    if r:
+        raise RuntimeError('An error occurred opening the page')
+
+def open_page1():
+    print "Opening page in Chrome"
+    p = subprocess.Popen(['chrome-cli', 'open', 'http://localhost:8992/stage-displays/questions.html', '-i'], stdout=LOG_OUTFILE)
     r = p.wait()
     if r:
         raise RuntimeError('An error occurred opening the page')
@@ -43,6 +50,13 @@ def http_server():
     httpd = SocketServer.TCPServer(( "", HTTP_PORT ), Handler )
 
     print "serving at port", HTTP_PORT
+    httpd.serve_forever()
+
+def http_server1():
+    Handler = SimpleHTTPServer.SimpleHTTPRequestHandler
+    httpd = SocketServer.TCPServer(( "", HTTP_PORT1 ), Handler )
+
+    print "serving at port", HTTP_PORT1
     httpd.serve_forever()
 
 def start_ws_client():
@@ -88,6 +102,10 @@ def callback(ws, **kw):
     ws.send( 'register', 'registered', client_name)
     webserverGreenlet = gevent.spawn(http_server)
     open_page_greenlet = gevent.spawn(open_page)
+
+    webserverGreenlet1 = gevent.spawn(http_server1) #Mina's change
+    open_page_greenlet1 = gevent.spawn(open_page1) #Mina's change
+
     print "Open browser to http://localhost:" + str(HTTP_PORT) + "/stage-displays/viewer.html"
     schedulerGreenlet = gevent.spawn(main, "")
     ws.handler_loop()
