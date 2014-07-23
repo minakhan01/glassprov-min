@@ -105,7 +105,8 @@
       console.log(id);
     /* If the ID of box1 is passed, hide the IDs of the other boxes */
     if(id == 'question1') {
-      document.getElementById('question1').style.display = "block";           
+      document.getElementById('question1').style.display = "block";
+      document.getElementById('questions').style.display = "none";   
     }
     
    /* If the ID of box2 is passed, hide the IDs of the other boxes */
@@ -403,7 +404,7 @@ display: none;
 <a href="#" onclick="buildData();">End</a>
 
 <div id="questions">
-<h1> Your Questions will appear here :) </h1>
+<h1> Your questions will appear here :) </h1>
 </div>
 
 <div id="question1">
@@ -464,8 +465,7 @@ What color is Africa (South of Sahara)? <br><input type="text" name="q2" id="q2"
 </div>
 
     <video src="HansRosling.mp4" controls autoplay width="1024" height="768" id="video1"></video>
-    <iframe src="http://free.timeanddate.com/countdown/i48ziftz/n43/cf100/cm0/cu4/ct0/cs0/ca0/cr0/ss0/cac000/cpc000/pcfff/tcfff/fs100/szw320/szh135/tatTime%20left%20to%20Event%20in/tac000/tptTime%20since%20Event%20started%20in/tpc000/mac000/mpc000/iso0001-01-01T00:17:00/bo2" frameborder="0" width="322" height="137"></iframe>
-
+    
 </font>
 
     <script>
@@ -484,7 +484,7 @@ What color is Africa (South of Sahara)? <br><input type="text" name="q2" id="q2"
     var question8_time=262;
     var question9_time=284;
     var question_status=0;
-    var video_length=oVideo.duration; 
+    var video_length=287; 
 
     //Mina's change
      //  Capture time changes and display current position
@@ -494,6 +494,7 @@ What color is Africa (South of Sahara)? <br><input type="text" name="q2" id="q2"
       console.log("In event listener");
       console.log(currentTime);
       console.log(second_round);
+      console.log(video_length);
       switch(second_round){
         case question1_time:
           if (question_status != 1){
