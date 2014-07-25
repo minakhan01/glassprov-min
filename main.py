@@ -5,7 +5,6 @@ import argparse
 import time
 import SimpleHTTPServer
 import SocketServer
-import os
 
 from datetime import datetime
 from datetime import timedelta
@@ -33,7 +32,7 @@ def start_ws_server():
 
 def open_page():
     print "Opening page in Chrome"
-    address=('http://localhost:%d/stage-displays/questions.html' % HTTP_PORT)
+    address=('http://localhost:%d/stage-displays/viewer.html' % HTTP_PORT)
     p = subprocess.Popen(['chrome-cli', 'open', address, '-i'], stdout=LOG_OUTFILE)
     r = p.wait()
     if r:

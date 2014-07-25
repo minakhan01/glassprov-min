@@ -36,7 +36,7 @@ while 1:
     addr = d[1]
     count=count+1
     print count
-    if count ==6:
+    if count ==7:
         os.system('python main.py') 
     if not data: 
         break
