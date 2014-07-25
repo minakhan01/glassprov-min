@@ -1,8 +1,4 @@
-Id: 6683
+Id: 6748
 Title: 
-Url: http://localhost:8991/stage-displays/viewer.html
-Loading: Yes
-Id: 6686
-Title: 
-Url: http://localhost:8992/stage-displays/questions.html
+Url: http://localhost:8991/stage-displays/questions.html
 Loading: Yes

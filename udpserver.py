@@ -5,6 +5,7 @@
  
 import socket
 import sys
+import os
  
 HOST = ''   # Symbolic name meaning all available interfaces
 PORT = 8088 # Arbitrary non-privileged port
@@ -34,7 +35,9 @@ while 1:
     data = d[0]
     addr = d[1]
     count=count+1
-    print count 
+    print count
+    if count ==6:
+        os.system('python main.py') 
     if not data: 
         break
      
