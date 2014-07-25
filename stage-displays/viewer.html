@@ -202,14 +202,14 @@
 
           // here we'll subscribe to "blob" instead
 
-
-          for (chan in lineChannels) {
-            ws.subscribe(lineChannels[chan], lines_cb)
-          }
-          for (chan in vidChannels) {
-            ws.subscribe(vidChannels[chan], vid_cb);
-          }
-          ws.subscribe("slides:", slides_cb);
+          //COMMENT CODE NOT REQUIRED
+          //for (chan in lineChannels) {
+          //  ws.subscribe(lineChannels[chan], lines_cb)
+          //}
+          //for (chan in vidChannels) {
+          //  ws.subscribe(vidChannels[chan], vid_cb);
+          //}
+          //ws.subscribe("slides:", slides_cb);
       };
       // $.ajax({
       //     type: "GET",
