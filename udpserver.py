@@ -26,19 +26,19 @@ except socket.error , msg:
     sys.exit()
      
 print 'Socket bind complete'
- 
+count=0; 
 #now keep talking with the client
 while 1:
     # receive data from client (data, addr)
     d = s.recvfrom(1024)
     data = d[0]
     addr = d[1]
-     
+    count=count+1
+    print count 
     if not data: 
         break
      
     reply = 'OK...' + data
-     
     s.sendto(reply , addr)
     print 'Message[' + addr[0] + ':' + str(addr[1]) + '] - ' + data.strip()
      
